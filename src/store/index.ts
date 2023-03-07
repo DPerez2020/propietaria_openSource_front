@@ -2,14 +2,12 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    layout: 'LoginLayout'
+    layout: 'PrincipalLayout'
   },
   getters: {
   },
   mutations: {
     SET_LAYOUT (state, newLayout) {
-      console.log('SET_LAYOUT: ' + newLayout);
-      
       state.layout = newLayout
     }
   },

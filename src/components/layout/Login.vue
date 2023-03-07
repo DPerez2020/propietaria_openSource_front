@@ -8,9 +8,6 @@
 <script>
 export default {
     name: 'LoginLayout',
-    created() {
-        this.$store.commit('SET_LAYOUT', 'LoginLayout')
-    },
     data() {
         return {
         };

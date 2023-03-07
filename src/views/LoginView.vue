@@ -15,15 +15,20 @@
 </template>
 <script>
 export default {
+    name: 'LoginView',
     data() {
         return {
             username: '',
             password: '',
         };
     },
+    created() {
+        this.$store.commit('SET_LAYOUT', 'LoginLayout')
+    },
     methods: {
         login() {
             // Your login logic here
+            this.$router.push('/')
         },
     },
 }

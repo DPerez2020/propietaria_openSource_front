@@ -4,22 +4,32 @@
         <v-navigation-drawer
           permanent
           width="150"
-          color="grey darken-1"
+          color="blue-grey-darken-4"
         >
         <v-list
           density="compact"
           nav
         >
-          <v-list-item prepend-icon="mdi-view-dashboard" title="Home" value="home"></v-list-item>
-          <v-list-item prepend-icon="mdi-forum" title="About" value="about"></v-list-item>
+          <v-list-item title="Home" value="home" to="/"></v-list-item>
+          <v-list-item title="Departamentos" value="departamentos" to="/departamentos"></v-list-item>
+          <v-list-item title="Empleados" value="empleados" to="/empleados"></v-list-item>
+          <v-list-item title="Activos fijos" value="empleados" to="/activos-fijos"></v-list-item>
+          <v-list-item title="Tipo de activos" value="tipo activos" to="tipos-activos"></v-list-item>
         </v-list>
+        <template v-slot:append>
+        <div class="pa-2">
+          <v-btn variant="plain" @click="logout()">Cerrar sesión</v-btn>          
+        </div>
+      </template>
       </v-navigation-drawer>
   
         <v-app-bar
-          color="primary"
+          color="blue-grey-darken-4"
           height="48"
           flat
-        ></v-app-bar>       
+        >
+        <v-app-bar-title>Final propietaria / open source</v-app-bar-title>      
+      </v-app-bar>       
   
         <v-main>
           <v-container
@@ -47,6 +57,16 @@
         }],
         title: 'Principal Layout'
       }
+    },
+    methods: {
+      changeRoute (route) {
+        this.$router.push(route)
+      },
+      logout () {
+        //this.$store.dispatch('logout'),
+        this.$store.commit('SET_LAYOUT', 'LoginLayout')
+        this.$router.push('/login')
+      }      
     },
   }
   </script>
