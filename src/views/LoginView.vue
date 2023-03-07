@@ -7,13 +7,16 @@
 
                 <v-text-field v-model="password" label="password"></v-text-field>
 
-                <v-btn type="submit" color="primary" block class="mt-2">Sign in</v-btn>
+                <v-btn type="submit" color="primary" block class="mt-2">Login</v-btn>
 
             </v-form>
         </v-sheet>
     </div>
 </template>
 <script>
+ 
+import http from '../http-common';
+
 export default {
     name: 'LoginView',
     data() {
@@ -27,8 +30,15 @@ export default {
     },
     methods: {
         login() {
-            // Your login logic here
-            this.$router.push('/')
+            http.post("/login", {
+                username: this.username,
+                password: this.password
+            }).then(response => {
+                this.$router.push('/')
+            }).catch(error => {
+                
+                console.log(error)
+            })
         },
     },
 }

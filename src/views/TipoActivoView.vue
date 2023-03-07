@@ -178,7 +178,7 @@
       },
       abrirModalCrear() {
         this.editing = false;
-        this.tipoActivo= { id: 0, descripcion: '' }
+        this.tipoActivo= { }
       },
       borrar(id) {
         http.delete(`/TipoActivo/${id}`).then((response) => {

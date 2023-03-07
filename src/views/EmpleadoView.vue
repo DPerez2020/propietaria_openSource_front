@@ -95,7 +95,7 @@
                 >
                   <v-text-field
                     label="Fecha de ingreso"
-                    model-value="empleado.fechaIngreso"
+                    v-model="empleado.fechaIngreso"
                     type="date"
                     required
                   ></v-text-field>

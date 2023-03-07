@@ -3,10 +3,10 @@
       <v-row>
         <v-col>
           <v-dialog
-        v-model="dialog"
-        persistent
-        width="1024"
-      >
+            v-model="dialog"
+            persistent
+            width="1024"
+          >
         <template v-slot:activator="{ props }">
           <v-btn
             color="primary"
@@ -35,27 +35,50 @@
                   ></v-text-field>
                 </v-col>             
                 <v-col
-                  cols="12"
-                  sm="12"
-                  md="12"
                 >
-                  <v-text-field
-                    label="Cuenta contable compra"
-                    v-model="activoFijo.cuentaContableCompra"
+                <v-select
+                    :items="departamentos"
+                    label="Departamento"
+                    item-value="id"
+                    item-title="descripcion"
+                    v-model="activoFijo.departamentoId"
                     required
-                  ></v-text-field>
+                  ></v-select>
                 </v-col>    
                 <v-col
-                  cols="12"
-                  sm="12"
-                  md="12"
                 >
+                <v-select
+                    :items="tiposActivos"
+                    label="Tipo de activo"
+                    item-value="id"
+                    item-title="descripcion"
+                    v-model="activoFijo.tipoActivoId"
+                    required
+                  ></v-select>
+                </v-col>                    
+              </v-row>
+              <v-row>
+                <v-col>
                   <v-text-field
-                    label="Cuenta contable depreciación"
-                    v-model="activoFijo.cuentaContableDepreciacion"
+                    label="Valor de la compra"
+                    v-model="activoFijo.valorCompra"
                     required
                   ></v-text-field>
-                </v-col>    
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    label="Año depreciacion"
+                    v-model="activoFijo.añoDepreciacion"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    label="Valor depreciacion"
+                    v-model="activoFijo.valorDepreciacion"
+                    required
+                  ></v-text-field>
+                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -93,8 +116,11 @@
       <tr v-for="item in items" :key="item.id">
         <td>{{ item.id }}</td>
         <td>{{ item.descripcion }}</td>
-        <td>{{ item.cuentaContableCompra }}</td>
-        <td>{{ item.cuentaContableDepreciacion }}</td>
+        <td>{{ item.departamento.descripcion }}</td>
+        <td>{{ item.tipoActivo.descripcion }}</td>
+        <td>{{ item.fechaRegistro }}</td>
+        <td>{{ item.valorCompra }}</td>
+        <td>{{ item.fechaRegistro }}</td>
         <td>
           <v-btn
             color="primary"
@@ -110,11 +136,21 @@
             color="error"
             dark
             small
-            @click="borrar(item.id)"
+            @click="calcularDepreciacion(item)"
           >
-            Borrar
+            Calcular depreciación
           </v-btn>
-        </td>      
+        </td>  
+        <td>
+          <v-btn
+            color="error"
+            dark
+            small
+            :to="`/Depreciacion/${item.id}`"
+          >
+            Ver depreciacion
+          </v-btn>
+        </td>    
       </tr>
     </tbody>
     </v-table>
@@ -148,11 +184,9 @@
             descripcion: '',   
             departamentoId:'',
             tipoActivoId:'',
-            fechaRegistro:'',
             valorCompra:'',
             añoDepreciacion:'',
-            valorDepreciacion:'',
-            depreciacionAcumulada:''
+            valorDepreciacion:''
         },
         editing: false,
         departamentos: [],
@@ -161,8 +195,15 @@
     },
     created() {
       this.getItems();
+      this.obtenerDepartamentos();
+      this.obtenerTipoActivo();
     },
     methods: {
+      calcularDepreciacion(item){
+        http.post(`/CalculoDepreciacion`,{ActivoFijoId:item.id}).then((response) => {
+          this.items = response.data;
+        });
+      },
       getItems() {
         http.get(`/ActivoFijo`).then((response) => {
           this.items = response.data;
