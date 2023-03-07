@@ -11,6 +11,7 @@
         <v-btn
           color="primary"
           v-bind="props"
+          @click="abrirModalCrear()"
         >
           Nuevo
         </v-btn>
@@ -29,11 +30,12 @@
               >
                 <v-text-field
                   label="Descripcion"
+                  v-model="departamento.descripcion"
                   required
                 ></v-text-field>
               </v-col>             
             </v-row>
-            <v-row>
+            <!-- <v-row>
               <v-col
                 cols="12"
                 sm="12"
@@ -44,7 +46,7 @@
                   required
                 ></v-select>
               </v-col>
-            </v-row>
+            </v-row> -->
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -59,7 +61,7 @@
           <v-btn
             color="blue-darken-1"
             variant="text"
-            @click="dialog = false"
+            @click="accionModal()"
           >
             Guardar
           </v-btn>
@@ -69,8 +71,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-table
-  >
+      <v-table>
   <thead>
     <tr>
       <th v-for="header in headers" :key="header.text">
@@ -82,23 +83,34 @@
     <tr v-for="item in items" :key="item.id">
       <td>{{ item.id }}</td>
       <td>{{ item.descripcion }}</td>
-      <td>
+      <!-- <td>
         <v-chip
           :color="item.estado ? 'green' : 'red'"
           dark
         >
           {{ item.estado ? 'Activo' : 'Inactivo' }}
         </v-chip>
-      </td>  
+      </td>   -->
       <td>
         <v-btn
           color="primary"
           dark
           small
+          @click="abrirModalEditar(item)"
         >
           Editar
         </v-btn>        
       </td>
+      <td>
+        <v-btn
+          color="error"
+          dark
+          small
+          @click="borrarDepartamento(item.id)"
+        >
+          Borrar
+        </v-btn>
+      </td>      
     </tr>
   </tbody>
   </v-table>
@@ -108,6 +120,8 @@
 
 <script>
 
+import http from '../http-common';
+
 export default {
   name: 'DepartamentoView',
   data() {
@@ -115,20 +129,55 @@ export default {
       headers: [
         { text: 'ID', value: 'id' },
         { text: 'Descripción', value: 'descripcion' },
-        { text: 'Estado', value: 'estado' },
+        // { text: 'Estado', value: 'estado' },
       ],
-      items: [
-        { id: 1, descripcion: 'Producto A', estado: true },
-        { id: 2, descripcion: 'Producto B', estado: false },
-        { id: 3, descripcion: 'Producto C', estado: true },
-      ],
-      dialog: false
+      items: [],
+      dialog: false,
+      departamento: {
+        id: 0,
+        descripcion: ''
+      },
+      editing: false,
     };
   },
   created() {
-    this.$axios.get(`https://localhost:7047/api/Departamento`).then((response) => {
-      console.log(response);
-    });
+    this.getItems();
+  },
+  methods: {
+    getItems() {
+      http.get(`/Departamento`).then((response) => {
+        this.items = response.data;
+      });
+    },
+    accionModal(){
+      this.editing ? this.editarDepartamento() : this.crearDepartamento();
+    },
+    crearDepartamento() {      
+      http.post(`/Departamento`, this.departamento).then((response) => {
+        this.getItems();
+        this.dialog = false;
+      });
+    },
+    editarDepartamento() {
+      http.put(`/Departamento/${this.departamento.id}`, this.departamento).then((response) => {
+        this.getItems();
+        this.dialog = false;
+      });
+    },
+    abrirModalEditar(item) {
+      this.departamento = item;
+      this.dialog = true;
+      this.editing = true;
+    },
+    abrirModalCrear() {
+      this.editing = false;
+      this.departamento = { id: 0, descripcion: '' }
+    },
+    borrarDepartamento(id) {
+      http.delete(`/Departamento/${id}`).then((response) => {
+        this.getItems();
+      });
+    },
   },
 };
 </script>

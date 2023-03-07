@@ -17,11 +17,35 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/departamentos',
-    name: 'departmaneto',
+    name: 'departamento',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/DepartamentoView.vue')
+  },
+  {
+    path: '/empleados',
+    name: 'empleados',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/EmpleadoView.vue')
+  },
+  {
+    path: '/tipos-activos',
+    name: 'tipos-activos',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/TipoActivoView.vue')
+  },
+  {
+    path: '/activos-fijos',
+    name: 'activo-fijo',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/ActivoFijoView.vue')
   },
 ]
 
