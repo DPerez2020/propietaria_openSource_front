@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex align-center justify-center" style="height: 100vh">
         <v-sheet width="400" class="mx-auto">
-            <v-toolbar title="Login" class="text-center" color="primary"></v-toolbar>
+            <v-toolbar class="text-center" color="primary"></v-toolbar>
             <v-form fast-fail @submit.prevent="login">
                 <v-text-field v-model="username" label="User Name"></v-text-field>
 
