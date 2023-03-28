@@ -42,8 +42,8 @@
     methods: {
       getItems() {
         const activoFijoId= this.$route.params.activoId;
-        http.get(`/CalculoDepreciacion/Get-by-activo`,{params:{activoFijoId}}).then((response) => {
-          this.items = response.data;
+        http.get(`/CalculoDepreciacion/Getbyactivo`,{params:{activoFijoId}}).then((response) => {
+          this.items = response.data.data;
         });
       }
     },

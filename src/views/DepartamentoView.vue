@@ -93,12 +93,12 @@
       </td>   -->
       <td>
         <v-btn
-          color="primary"
+          color="warning"
           dark
           small
           @click="abrirModalEditar(item)"
         >
-          Editar
+          <v-icon icon="mdi-lead-pencil"></v-icon>
         </v-btn>        
       </td>
       <td>
@@ -108,7 +108,7 @@
           small
           @click="borrarDepartamento(item.id)"
         >
-          Borrar
+          <v-icon icon="mdi-delete"></v-icon>
         </v-btn>
       </td>      
     </tr>
@@ -121,6 +121,7 @@
 <script>
 
 import http from '../http-common';
+import DialogConfirm from '../http-common';
 
 export default {
   name: 'DepartamentoView',
@@ -129,7 +130,8 @@ export default {
       headers: [
         { text: 'ID', value: 'id' },
         { text: 'Descripción', value: 'descripcion' },
-        // { text: 'Estado', value: 'estado' },
+        { text: 'Editar', value: 'editar' },
+        { text: 'Borrar', value: 'Borrar' },
       ],
       items: [],
       dialog: false,
@@ -146,8 +148,7 @@ export default {
   methods: {
     getItems() {
       http.get(`/Departamento`).then((response) => {
-        this.items = response.data;
-      });
+        this.items = response.data.data});
     },
     accionModal(){
       this.editing ? this.editarDepartamento() : this.crearDepartamento();
@@ -156,7 +157,9 @@ export default {
       http.post(`/Departamento`, this.departamento).then((response) => {
         this.getItems();
         this.dialog = false;
-      });
+      }).catch(data => {
+            console.log(data)
+        });
     },
     editarDepartamento() {
       http.put(`/Departamento/${this.departamento.id}`, this.departamento).then((response) => {

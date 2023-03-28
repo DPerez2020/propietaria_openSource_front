@@ -7,6 +7,8 @@
 
                 <v-text-field v-model="password" label="password"></v-text-field>
 
+                <p v-if="fail" class="text-red">El usuario o contraseña son incorrectos.</p>
+
                 <v-btn type="submit" color="primary" block class="mt-2">Login</v-btn>
 
             </v-form>
@@ -23,6 +25,7 @@ export default {
         return {
             username: '',
             password: '',
+            fail: false,
         };
     },
     created() {
@@ -36,8 +39,8 @@ export default {
             }).then(response => {
                 this.$router.push('/')
             }).catch(error => {
-                
-                console.log(error)
+                console.log(error),
+                this.fail = true
             })
         },
     },

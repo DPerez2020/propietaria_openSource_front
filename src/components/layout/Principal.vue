@@ -13,8 +13,8 @@
           <v-list-item title="Home" value="home" to="/"></v-list-item>
           <v-list-item title="Departamentos" value="departamentos" to="/departamentos"></v-list-item>
           <v-list-item title="Empleados" value="empleados" to="/empleados"></v-list-item>
-          <v-list-item title="Activos fijos" value="empleados" to="/activos-fijos"></v-list-item>
           <v-list-item title="Tipo de activos" value="tipo activos" to="tipos-activos"></v-list-item>
+          <v-list-item title="Activos fijos" value="empleados" to="/activos-fijos"></v-list-item>
         </v-list>
         <template v-slot:append>
         <div class="pa-2">

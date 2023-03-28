@@ -159,12 +159,12 @@
         <td>{{ item.fechaIngreso }}</td>
         <td>
           <v-btn
-            color="primary"
+            color="warning"
             dark
             small
             @click="abrirModalEditar(item)"
           >
-            Editar
+          <v-icon icon="mdi-lead-pencil"></v-icon>
           </v-btn>        
         </td>
         <td>
@@ -174,7 +174,7 @@
             small
             @click="borrar(item.id)"
           >
-            Borrar
+          <v-icon icon="mdi-delete"></v-icon>
           </v-btn>
         </td>      
       </tr>
@@ -200,7 +200,9 @@
           { text: 'Cedula' },
           { text: 'Departamento' },
           { text: 'Tipo de persona' },
-          { text: 'Fecha de ingreso' }      
+          { text: 'Fecha de ingreso' },  
+          { text: 'Editar' },     
+          { text: 'Borrar' }      
         ],
         items: [],
         dialog: false,
@@ -228,7 +230,10 @@
     methods: {
       getItems() {
         http.get(`/Empleado`).then((response) => {
-          this.items = response.data;
+          this.items = response.data.data;
+          this.items.forEach(empleado => {
+            empleado.fechaIngreso = this.formatearFecha(empleado.fechaIngreso)
+          });
         });
       },
       accionModal(){
@@ -244,6 +249,8 @@
         http.put(`/Empleado/${this.empleado.id}`, this.empleado).then((response) => {
           this.getItems();
           this.dialog = false;
+        }).catch(err => {
+          console.log(err.message);
         });
       },
       abrirModalEditar(item) {
@@ -263,9 +270,14 @@
       },
       obtenerDepartamentos(){
         http.get(`/Departamento`).then((response) => {
-          this.departamentos = response.data;
+          this.departamentos = response.data.data;
         });
       },
+      formatearFecha(fecha){
+        fecha = fecha.substring(0,9).split("-").reverse().join("-");
+        // año = fecha.split("-");
+        return fecha;
+      }
     },
   };
   </script>

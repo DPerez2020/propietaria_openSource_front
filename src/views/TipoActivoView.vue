@@ -97,12 +97,13 @@
         <td>{{ item.cuentaContableDepreciacion }}</td>
         <td>
           <v-btn
-            color="primary"
+            color="warning"
             dark
             small
             @click="abrirModalEditar(item)"
           >
-            Editar
+          <v-icon icon="mdi-lead-pencil"></v-icon>
+
           </v-btn>        
         </td>
         <td>
@@ -112,7 +113,7 @@
             small
             @click="borrar(item.id)"
           >
-            Borrar
+          <v-icon icon="mdi-delete"></v-icon>
           </v-btn>
         </td>      
       </tr>
@@ -134,7 +135,9 @@
           { text: 'ID' },
           { text: 'Descripción'},
           { text: 'Cuenta contable Compra'},
-          { text: 'Cuenta contable Depreciación'}          
+          { text: 'Cuenta contable Depreciación'},       
+          { text: 'Editar'},   
+          { text: 'Borrar'}          
         ],
         items: [],
         dialog: false,
@@ -153,7 +156,7 @@
     methods: {
       getItems() {
         http.get(`/TipoActivo`).then((response) => {
-          this.items = response.data;
+          this.items = response.data.data;
         });
       },
       accionModal(){
@@ -161,8 +164,11 @@
       },
       crear() {      
         http.post(`/TipoActivo`, this.tipoActivo).then((response) => {
+          console.log(response.data.message)
           this.getItems();
           this.dialog = false;
+        }).catch(error => {
+                console.log(error.errors)
         });
       },
       editar() {

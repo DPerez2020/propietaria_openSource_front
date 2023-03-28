@@ -116,39 +116,41 @@
       <tr v-for="item in items" :key="item.id">
         <td>{{ item.id }}</td>
         <td>{{ item.descripcion }}</td>
-        <td>{{ item.departamento.descripcion }}</td>
-        <td>{{ item.tipoActivo.descripcion }}</td>
+        <td>{{ item.descripcionDepartamento }}</td>
+        <td>{{ item.descripcionTipoActivo }}</td>
         <td>{{ item.fechaRegistro }}</td>
         <td>{{ item.valorCompra }}</td>
-        <td>{{ item.fechaRegistro }}</td>
+        <td>{{ item.anioDepreciacion }}</td>
+        <td>{{ item.valorDepreciacion }}</td>
         <td>
           <v-btn
-            color="primary"
+            color="warning"
             dark
             small
             @click="abrirModalEditar(item)"
           >
-            Editar
+          <v-icon icon="mdi-lead-pencil"></v-icon>
           </v-btn>        
         </td>
         <td>
           <v-btn
-            color="error"
+            color="deep-purple"
             dark
             small
             @click="calcularDepreciacion(item)"
           >
-            Calcular depreciación
+          
+          <v-icon icon="mdi-calculator"></v-icon>
           </v-btn>
         </td>  
         <td>
           <v-btn
-            color="error"
+            color="blue"
             dark
             small
             :to="`/Depreciacion/${item.id}`"
           >
-            Ver depreciacion
+          <v-icon icon="mdi-eye"></v-icon>
           </v-btn>
         </td>    
       </tr>
@@ -175,7 +177,9 @@
           { text: 'Valor compra'},
           { text: 'Año depreciación'},
           { text: 'Valor depreciación'},
-          { text: 'Depreciación acumulada'}
+          { text: 'Editar'},
+          { text: 'Calcular depreciacion'},
+          { text: 'Depreciaciones'}
         ],
         items: [],
         dialog: false,
@@ -183,9 +187,12 @@
             id: 0,
             descripcion: '',   
             departamentoId:'',
+            descripcionDepartamento: '',
             tipoActivoId:'',
+            descripcionTipoActivo: '',
+            fechaRegistro: '',
             valorCompra:'',
-            añoDepreciacion:'',
+            anioDepreciacion:'',
             valorDepreciacion:''
         },
         editing: false,
@@ -201,12 +208,15 @@
     methods: {
       calcularDepreciacion(item){
         http.post(`/CalculoDepreciacion`,{ActivoFijoId:item.id}).then((response) => {
-          this.items = response.data;
+          this.items = response.data.data;
         });
       },
       getItems() {
         http.get(`/ActivoFijo`).then((response) => {
-          this.items = response.data;
+          this.items = response.data.data;
+          this.items.forEach(activoFijo => {
+            activoFijo.fechaRegistro = this.formatearFecha(activoFijo.fechaRegistro);
+          });    
         });
       },
       accionModal(){
@@ -240,14 +250,19 @@
       },
       obtenerDepartamentos(){
         http.get(`/Departamento`).then((response) => {
-          this.departamentos = response.data;
+          this.departamentos = response.data.data;
         });
       },
       obtenerTipoActivo(){
         http.get(`/TipoActivo`).then((response) => {
-          this.tiposActivos = response.data;
+          this.tiposActivos = response.data.data;
         });
       },
+      formatearFecha(fecha){
+        fecha = fecha.substring(0,9).split("-").reverse().join("-");
+        // año = fecha.split("-");
+        return fecha;
+      }
     },
   };
   </script>
