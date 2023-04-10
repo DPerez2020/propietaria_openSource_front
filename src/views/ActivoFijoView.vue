@@ -235,7 +235,7 @@
         });
       },
       abrirModalEditar(item) {
-        this.activoFijo = item;
+        this.activoFijo = Object.assign({}, item);
         this.dialog = true;
         this.editing = true;
       },

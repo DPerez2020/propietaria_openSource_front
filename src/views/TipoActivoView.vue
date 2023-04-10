@@ -178,7 +178,7 @@
         });
       },
       abrirModalEditar(item) {
-        this.tipoActivo = item;
+        this.tipoActivo = Object.assign({}, item);
         this.dialog = true;
         this.editing = true;
       },

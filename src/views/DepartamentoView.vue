@@ -168,7 +168,7 @@ export default {
       });
     },
     abrirModalEditar(item) {
-      this.departamento = item;
+      this.departamento = Object.assign({}, item);
       this.dialog = true;
       this.editing = true;
     },

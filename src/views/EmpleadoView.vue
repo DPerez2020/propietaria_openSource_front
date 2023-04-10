@@ -189,6 +189,8 @@
   import http from '../http-common';
   import moment from "moment"
   
+  import {valida_cedula} from '../utils/helpers.js';
+  
   export default {
     name: 'EmpleadoView',
     data() {
@@ -212,7 +214,7 @@
           apellido:'',
           cedula:'',
           departamentoId:'',
-          tipoPersona:'',          
+          tipoPersona:0,          
           fechaIngreso:'',
         },
         editing: false,
@@ -239,7 +241,11 @@
       accionModal(){
         this.editing ? this.editar() : this.crear();
       },
-      crear() {      
+      crear() {   
+        if (!valida_cedula(this.empleado.cedula)) {
+          return;
+        }
+        
         http.post(`/Empleado`, this.empleado).then((response) => {
           this.getItems();
           this.dialog = false;
@@ -254,7 +260,7 @@
         });
       },
       abrirModalEditar(item) {
-        this.empleado = item;        
+        this.empleado = Object.assign({}, item);        
         this.empleado.fechaIngreso = moment(item.fechaIngreso).format('YYYY-MM-DD');
         this.dialog = true;
         this.editing = true;
