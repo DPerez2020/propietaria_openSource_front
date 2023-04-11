@@ -121,7 +121,6 @@
 <script>
 
 import http from '../http-common';
-import DialogConfirm from '../http-common';
 
 export default {
   name: 'DepartamentoView',

@@ -15,6 +15,7 @@
           <v-list-item title="Empleados" value="empleados" to="/empleados"></v-list-item>
           <v-list-item title="Tipo de activos" value="tipo activos" to="tipos-activos"></v-list-item>
           <v-list-item title="Activos fijos" value="empleados" to="/activos-fijos"></v-list-item>
+          <v-list-item title="Enviar a contabilidad" value="enviarContabilidad" to="/enviar-contabilidad"></v-list-item>
         </v-list>
         <template v-slot:append>
         <div class="pa-2">
