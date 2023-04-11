@@ -142,7 +142,7 @@
         <td>{{ item.departamentoDescripcion }}</td>
         <td>
           <v-chip
-            v-if="item.tipoPersona == 0"
+            v-if="item.tipoPersona == 'Fisica'"
             color="green"
             text-color="white"
           >
@@ -233,9 +233,9 @@
       getItems() {
         http.get(`/Empleado`).then((response) => {
           this.items = response.data.data;
-          this.items.forEach(empleado => {
-            empleado.fechaIngreso = this.formatearFecha(empleado.fechaIngreso)
-          });
+          // this.items.forEach(empleado => {
+          //   empleado.fechaIngreso = this.formatearFecha(empleado.fechaIngreso)
+          // });
         });
       },
       accionModal(){
@@ -252,6 +252,7 @@
         });
       },
       editar() {
+        if(this.empleado.tipoPersona == 'Fisica') this.empleado.tipoPersona = 0;
         http.put(`/Empleado/${this.empleado.id}`, this.empleado).then((response) => {
           this.getItems();
           this.dialog = false;
