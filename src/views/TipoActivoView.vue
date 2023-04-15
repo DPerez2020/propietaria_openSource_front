@@ -16,67 +16,71 @@
             Nuevo
           </v-btn>
         </template>
-        <v-card>
-          <v-card-title>
-            <span class="text-h5">Nuevo Activo fijo</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="12"
-                >
-                  <v-text-field
-                    label="Descripcion"
-                    v-model="tipoActivo.descripcion"
-                    required
-                  ></v-text-field>
-                </v-col>             
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="12"
-                >
-                  <v-text-field
-                    label="Cuenta contable compra"
-                    v-model="tipoActivo.cuentaContableCompra"
-                    required
-                  ></v-text-field>
-                </v-col>    
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="12"
-                >
-                  <v-text-field
-                    label="Cuenta contable depreciación"
-                    v-model="tipoActivo.cuentaContableDepreciacion"
-                    required
-                  ></v-text-field>
-                </v-col>    
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="blue-darken-1"
-              variant="text"
-              @click="dialog = false"
-            >
-              Cancelar
-            </v-btn>
-            <v-btn
-              color="blue-darken-1"
-              variant="text"
-              @click="accionModal()"
-            >
-              Guardar
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <v-form ref="form">
+
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">Nuevo Activo fijo</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    sm="12"
+                    md="12"
+                  >
+                    <v-text-field
+                      label="Descripcion"
+                      v-model="tipoActivo.descripcion"
+                      :rules="DescripcionRules"
+                    ></v-text-field>
+                  </v-col>             
+                  <v-col
+                    cols="12"
+                    sm="12"
+                    md="12"
+                  >
+                    <v-text-field
+                      label="Cuenta contable compra"
+                      v-model="tipoActivo.cuentaContableCompra"
+                      :rules="CuentaContableCompraRules"
+                      required
+                    ></v-text-field>
+                  </v-col>    
+                  <v-col
+                    cols="12"
+                    sm="12"
+                    md="12"
+                  >
+                    <v-text-field
+                      label="Cuenta contable depreciación"
+                      v-model="tipoActivo.cuentaContableDepreciacion"
+                      :rules="CuentaContableDepreciacionRules"
+                    ></v-text-field>
+                  </v-col>    
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue-darken-1"
+                variant="text"
+                @click="dialog = false"
+              >
+                Cancelar
+              </v-btn>
+              <v-btn
+                color="blue-darken-1"
+                variant="text"
+                @click="accionModal()"
+              >
+                Guardar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
       </v-dialog>
         </v-col>
       </v-row>
@@ -147,6 +151,18 @@
             cuentaContableCompra: '',
             cuentaContableDepreciacion: ''
         },
+        DescripcionRules:[
+          v => !! v || 'La descripción es requerido.',
+          v => v.length > 2 && v.length < 30 || 'La descripción debe tener mas de 2 carácteres y menos de 30.'
+        ],
+        CuentaContableCompraRules:[
+          v => !! v || 'La cuenta de compra es requerida.',
+          v => v == 65 || 'El valor del a cuenta contable de compra no es valido.'
+        ],
+        CuentaContableDepreciacionRules:[
+          v => !! v || 'La cuenta de depreciación es requerida.',
+          v => v == 66 || 'El valor del a cuenta contable de depreciación no es valido.'
+        ],
         editing: false,
       };
     },
@@ -160,7 +176,9 @@
         });
       },
       accionModal(){
-        this.editing ? this.editar() : this.crear();
+        if (this.$refs.form.validate()) {
+          this.editing ? this.editar() : this.crear();
+        }
       },
       crear() {      
         http.post(`/TipoActivo`, this.tipoActivo).then((response) => {

@@ -16,90 +16,92 @@
         Nuevo
         </v-btn>
         </template>
-        <v-card>
-        <v-card-title>
-        <span class="text-h5">Nuevo Activo fijo</span>
-        </v-card-title>
-        <v-card-text>
-        <v-container>
-          <v-row>
-            <v-col
-              cols="4"
-              sm="4"
-              md="4"
-            >
-              <v-text-field
-                label="Descripcion"
-                v-model="activoFijo.descripcion"
-                required
-              ></v-text-field>
-            </v-col>             
-            <v-col
-            >
-            <v-select
-                :items="departamentos"
-                label="Departamento"
-                item-value="id"
-                item-title="descripcion"
-                v-model="activoFijo.departamentoId"
-                required
-              ></v-select>
-            </v-col>    
-            <v-col
-            >
-            <v-select
-                :items="tiposActivos"
-                label="Tipo de activo"
-                item-value="id"
-                item-title="descripcion"
-                v-model="activoFijo.tipoActivoId"
-                required
-              ></v-select>
-            </v-col>                    
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-text-field
-                label="Valor de la compra"
-                v-model="activoFijo.valorCompra"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                label="Año depreciacion"
-                v-model="activoFijo.anioDepreciacion"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                label="Valor depreciacion"
-                v-model="activoFijo.valorDepreciacion"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-container>
-        </v-card-text>
-        <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="blue-darken-1"
-          variant="text"
-          @click="dialog = false"
-        >
-          Cancelar
-        </v-btn>
-        <v-btn
-          color="blue-darken-1"
-          variant="text"
-          @click="accionModal()"
-        >
-          Guardar
-        </v-btn>
-        </v-card-actions>
-        </v-card>
+        <v-form ref="form">
+          <v-card>
+          <v-card-title>
+          <span class="text-h5">Nuevo Activo fijo</span>
+          </v-card-title>
+          <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col
+                cols="4"
+                sm="4"
+                md="4"
+              >
+                <v-text-field
+                  label="Descripcion"
+                  v-model="activoFijo.descripcion"
+                  :rules="DescripcionRules"
+                ></v-text-field>
+              </v-col>             
+              <v-col
+              >
+              <v-select
+                  :items="departamentos"
+                  label="Departamento"
+                  item-value="id"
+                  item-title="descripcion"
+                  v-model="activoFijo.departamentoId"
+                  required
+                ></v-select>
+              </v-col>    
+              <v-col
+              >
+              <v-select
+                  :items="tiposActivos"
+                  label="Tipo de activo"
+                  item-value="id"
+                  item-title="descripcion"
+                  v-model="activoFijo.tipoActivoId"
+                  required
+                ></v-select>
+              </v-col>                    
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  label="Valor de la compra"
+                  v-model="activoFijo.valorCompra"
+                  :rules="ValorCompraRules"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Año depreciacion"
+                  v-model="activoFijo.anioDepreciacion"
+                  :rules="AnioDepreciacionRules"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Valor depreciacion"
+                  v-model="activoFijo.valorDepreciacion"
+                  :rules="ValorDepreciacionRules"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+          </v-card-text>
+          <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="dialog = false"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="accionModal()"
+          >
+            Guardar
+          </v-btn>
+          </v-card-actions>
+          </v-card>
+        </v-form>
         </v-dialog>
       </v-col>
       </v-row>
@@ -321,6 +323,22 @@
             descripcion: 'Diciembre'
           },
         ],
+        DescripcionRules:[
+          v => !! v || 'La descripción es requerida',
+          v => v.length > 2 && v.length < 30 || 'La descripción debe tener mas de 2 carácteres y menos de 30.'
+        ],
+        ValorCompraRules:[
+          v => !! v || 'El valor de compra es requerido',
+          v => v > 0 || 'El valor de compra debe ser positivo.' 
+        ],
+        AnioDepreciacionRules:[
+          v => !! v || 'El año de depreaciación es requerido',
+          v => v >= 2023 || 'el año de depreciación no puede ser menos al año en curso.' 
+        ],
+        ValorDepreciacionRules:[
+          v => !! v || 'El valor de depreciación es requerido',
+          v => v > 0 || 'el año de depreciación no puede debe ser positivo.'
+        ],
         editing: false,
         departamentos: [],
         tiposActivos: []
@@ -363,7 +381,9 @@
         });
       },
       accionModal(){
+      if (this.$refs.form.validate()) {
         this.editing ? this.editar() : this.crear();
+      }
       },
       crear() {      
         http.post(`/ActivoFijo`, this.activoFijo).then((response) => {

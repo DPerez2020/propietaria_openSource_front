@@ -6,6 +6,7 @@ import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 
 loadFonts()
+import "bootstrap/dist/css/bootstrap.min.css";
 
 createApp(App)
   .use(router)
