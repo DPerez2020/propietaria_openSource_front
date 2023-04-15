@@ -16,57 +16,49 @@
           Nuevo
         </v-btn>
       </template>
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Nuevo departamento</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col
-                cols="12"
-                sm="12"
-                md="12"
-              >
-                <v-text-field
-                  label="Descripcion"
-                  v-model="departamento.descripcion"
-                  required
-                ></v-text-field>
-              </v-col>             
-            </v-row>
-            <!-- <v-row>
-              <v-col
-                cols="12"
-                sm="12"
-              >
-                <v-select
-                  :items="['Acivo', 'Inactivo']"
-                  label="Estado"
-                  required
-                ></v-select>
-              </v-col>
-            </v-row> -->
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="blue-darken-1"
-            variant="text"
-            @click="dialog = false"
-          >
-            Cancelar
-          </v-btn>
-          <v-btn
-            color="blue-darken-1"
-            variant="text"
-            @click="accionModal()"
-          >
-            Guardar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+      <v-form ref="form">
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">Nuevo departamento</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="12"
+                  md="12"
+                >
+                  <v-text-field
+                    label="Descripcion"
+                    v-model="departamento.descripcion"
+                    :rules="descripcionRules"
+                    required
+                  ></v-text-field>
+                </v-col>             
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue-darken-1"
+              variant="text"
+              @click="dialog = false"
+            >
+              Cancelar
+            </v-btn>
+            <v-btn
+              color="blue-darken-1"
+              variant="text"
+              @click="accionModal()"
+            >
+              Guardar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+
     </v-dialog>
       </v-col>
     </v-row>
@@ -138,6 +130,10 @@ export default {
         id: 0,
         descripcion: ''
       },
+      descripcionRules:[
+        v => !! v || 'La descripción es requerida',
+        v => v.length > 2 && v.length < 30 || 'La descripción debe tener mas de 2 carácteres y menos de 30.'
+      ],
       editing: false,
     };
   },
@@ -150,7 +146,10 @@ export default {
         this.items = response.data.data});
     },
     accionModal(){
-      this.editing ? this.editarDepartamento() : this.crearDepartamento();
+      if (this.$refs.form.validate()) {
+        this.editing ? this.editarDepartamento() : this.crearDepartamento();
+      }
+
     },
     crearDepartamento() {      
       http.post(`/Departamento`, this.departamento).then((response) => {

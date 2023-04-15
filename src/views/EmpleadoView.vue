@@ -16,116 +16,120 @@
             Nuevo
           </v-btn>
         </template>
-        <v-card>
-          <v-card-title>
-            <span class="text-h5">Nuevo empleado</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col
-                  cols="6"
-                  sm="6"
-                  md="6"
-                >
-                  <v-text-field
-                    label="Nombre"
-                    v-model="empleado.nombre"
-                    required
-                  ></v-text-field>
-                </v-col> 
-                <v-col
-                  cols="6"
-                  sm="6"
-                  md="6"
-                >
-                  <v-text-field
-                    label="Apellido"
-                    v-model="empleado.apellido"
-                    required
-                  ></v-text-field>
-                </v-col>                           
-              </v-row>
-              <v-row>
-                <v-col
-                  cols="6"
-                  sm="6"
-                  md="6"
-                >
-                  <v-text-field
-                    label="Cedula"
-                    v-model="empleado.cedula"
-                    required
-                  ></v-text-field>
-                </v-col> 
-                <v-col
-                  cols="6"
-                  sm="6"
-                  md="6"
-                >
-                <v-select
-                    :items="departamentos"
-                    label="Departamento"
-                    item-value="id"
-                    item-title="descripcion"
-                    v-model="empleado.departamentoId"
-                    required
-                  ></v-select>
-                </v-col>              
-              </v-row>
-              <v-row>
-                <v-col
-                  cols="6"
-                  sm="6"
-                  md="6"
-                >
-                <v-select
-                    :items="tipoPersonas"
-                    label="Tipo de persona"
-                    item-value="value"
-                    item-title="title"
-                    v-model="empleado.tipoPersona"
-                    required
-                  ></v-select>
-                </v-col> 
-                <v-col
-                  cols="6"
-                  sm="6"
-                  md="6"
-                >
-                  <v-text-field
-                    label="Fecha de ingreso"
-                    v-model="empleado.fechaIngreso"
-                    type="date"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="blue-darken-1"
-              variant="text"
-              @click="dialog = false"
-            >
-              Cancelar
-            </v-btn>
-            <v-btn
-              color="blue-darken-1"
-              variant="text"
-              @click="accionModal()"
-            >
-              Guardar
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <v-form ref="form">
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">Nuevo empleado</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-text-field
+                      label="Nombre"
+                      v-model="empleado.nombre"
+                      :rules="NombreRules"
+                    ></v-text-field>
+                  </v-col> 
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-text-field
+                      label="Apellido"
+                      v-model="empleado.apellido"
+                      :rules="ApellidoRules"
+                      required
+                    ></v-text-field>
+                  </v-col>                           
+                </v-row>
+                <v-row>
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-text-field
+                      label="Cedula"
+                      v-model="empleado.cedula"
+                      :rules="CedulaRules"
+                      required
+                    ></v-text-field>
+                  </v-col> 
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                  >
+                  <v-select
+                      :items="departamentos"
+                      label="Departamento"
+                      item-value="id"
+                      item-title="descripcion"
+                      v-model="empleado.departamentoId"
+                      required
+                    ></v-select>
+                  </v-col>              
+                </v-row>
+                <v-row>
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                  >
+                  <v-select
+                      :items="tipoPersonas"
+                      label="Tipo de persona"
+                      item-value="value"
+                      item-title="title"
+                      v-model="empleado.tipoPersona"
+                      required
+                    ></v-select>
+                  </v-col> 
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-text-field
+                      label="Fecha de ingreso"
+                      v-model="empleado.fechaIngreso"
+                      type="date"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue-darken-1"
+                variant="text"
+                @click="dialog = false"
+              >
+                Cancelar
+              </v-btn>
+              <v-btn
+                color="blue-darken-1"
+                variant="text"
+                @click="accionModal()"
+              >
+                Guardar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
       </v-dialog>
         </v-col>
       </v-row>
       <v-row>
-        <v-table>
+  <v-table hover="true">
     <thead>
       <tr>
         <th v-for="header in headers" :key="header.text">
@@ -217,6 +221,18 @@
           tipoPersona:0,          
           fechaIngreso:'',
         },
+        NombreRules:[
+          v => !! v || 'El nombre es requerido.',
+          v => v.length > 2 && v.length < 30  || 'El nombre debe tener mas de 2 carácteres y menos de 30.' 
+        ],
+        ApellidoRules:[
+          v => !! v || 'El apellido es requerido.',
+          v => v.length > 2 && v.length < 30  || 'El apellido debe tener mas de 2 carácteres y menos de 30.' 
+        ],
+        CedulaRules:[
+          v => !! v || 'La cédula es requerida.',
+          v => valida_cedula(v) ? true : 'La cédula ingresada no es valida.'
+        ],
         editing: false,
         departamentos: [],
         tipoPersonas: [
@@ -239,7 +255,9 @@
         });
       },
       accionModal(){
-        this.editing ? this.editar() : this.crear();
+        if (this.$refs.form.validate()) {
+          this.editing ? this.editar() : this.crear();
+        }
       },
       crear() {   
         if (!valida_cedula(this.empleado.cedula)) {
@@ -282,7 +300,6 @@
       },
       formatearFecha(fecha){
         fecha = fecha.substring(0,9).split("-").reverse().join("-");
-        // año = fecha.split("-");
         return fecha;
       }
     },
